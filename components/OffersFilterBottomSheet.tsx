@@ -1,14 +1,18 @@
-import BottomSheet, { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet'
-import { Portal } from '@rn-primitives/portal'
-import React, { useCallback } from 'react'
-import { Pressable, ScrollView, Text, View } from 'react-native'
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetBackdropProps,
+  BottomSheetScrollView,
+} from "@gorhom/bottom-sheet";
+import { Portal } from "@rn-primitives/portal";
+import React, { useCallback } from "react";
+import { ScrollView, Text, View } from "react-native";
 
-import { Button } from '@/components/ui/button'
-import Divider from '@/components/ui/divider'
-import { STOPS_OPTIONS } from '@/constants/search'
-import { useSearchFilters } from '@/hooks/useSearchFilters'
-import { cn } from '@/lib/utils'
-import type { Offer } from '@/types/search'
+import { Button } from "@/components/ui/button";
+import Divider from "@/components/ui/divider";
+import { STOPS_OPTIONS } from "@/constants/stops";
+import { useOfferFilters } from "@/hooks/useOfferFilters";
+import { cn } from "@/lib/utils";
+import type { Offer } from "@/types/offer";
 
 interface OffersFilterBottomSheetProps {
   bottomSheetRef: React.RefObject<BottomSheet | null>;
@@ -34,24 +38,23 @@ export default function OffersFilterBottomSheet({
     toggleAirline,
     resultCount,
     isDirectOnly,
-  } = useSearchFilters(offers);
+  } = useOfferFilters(offers);
 
   const renderBackdrop = useCallback(
-    (props: any) => (
+    (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} opacity={0.5} />
     ),
-    []
+    [],
   );
 
-  // Хелпер для стилизации текста в зависимости от состояния кнопки
-  const getBtnTextClass = (isActive: boolean) => cn(isActive ? 'text-primary-foreground' : 'text-foreground');
+  const handleClose = () => bottomSheetRef.current?.close();
 
   return (
     <Portal name="Results filter bottom sheet">
       <BottomSheet
         ref={bottomSheetRef}
         index={-1}
-        snapPoints={['55%', '92%']}
+        snapPoints={["55%", "92%"]}
         enablePanDownToClose
         backdropComponent={renderBackdrop}
       >
@@ -63,11 +66,13 @@ export default function OffersFilterBottomSheet({
             </Button>
           )}
         </View>
-        <BottomSheetScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 160 }}>
+        <BottomSheetScrollView
+          contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 160 }}
+        >
           <SectionHeader title="Популярные фильтры" />
           <View className="flex-row flex-wrap gap-2">
             <Button
-              variant={filters.baggage_only ? 'default' : 'outline'}
+              variant={filters.baggage_only ? "default" : "outline"}
               size="sm"
               className="rounded-full"
               onPress={() => setFilters({ baggage_only: !filters.baggage_only })}
@@ -76,7 +81,7 @@ export default function OffersFilterBottomSheet({
             </Button>
 
             <Button
-              variant={isDirectOnly ? 'default' : 'outline'}
+              variant={isDirectOnly ? "default" : "outline"}
               size="sm"
               className="rounded-full"
               onPress={() => setFilters({ stops: isDirectOnly ? null : [0] })}
@@ -88,19 +93,25 @@ export default function OffersFilterBottomSheet({
           <View className="flex-row justify-between items-center mb-3">
             <SectionHeader title="Авиакомпании" />
             {filters.airlines && filters.airlines.length > 0 && (
-              <Pressable onPress={() => setFilters({ airlines: null })} hitSlop={8}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onPress={() => setFilters({ airlines: null })}
+                hitSlop={8}
+              >
                 <Text className="text-xs text-primary font-medium">Показать все</Text>
-              </Pressable>
+              </Button>
             )}
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-1">
             <View className="flex-row gap-2 px-1 pb-1">
               {availableAirlines.map((airline) => {
                 const isActive = !!filters.airlines?.includes(airline.code);
+
                 return (
                   <Button
                     key={airline.code}
-                    variant={isActive ? 'default' : 'outline'}
+                    variant={isActive ? "default" : "outline"}
                     size="sm"
                     className="rounded-full"
                     onPress={() => toggleAirline(airline.code)}
@@ -116,11 +127,12 @@ export default function OffersFilterBottomSheet({
           <View className="bg-muted/50 rounded-2xl p-4 border border-border">
             <View className="flex-row flex-wrap gap-2">
               {STOPS_OPTIONS.map((opt) => {
-                const isActive = !!filters.stops?.includes(opt.value as any);
+                const isActive = !!filters.stops?.includes(opt.value);
+
                 return (
                   <Button
                     key={opt.value}
-                    variant={isActive ? 'default' : 'outline'}
+                    variant={isActive ? "default" : "outline"}
                     size="sm"
                     className="rounded-full"
                     onPress={() => toggleStop(opt.value)}
@@ -137,10 +149,10 @@ export default function OffersFilterBottomSheet({
             size="lg"
             className={cn("w-full rounded-2xl", resultCount === 0 && "opacity-50")}
             disabled={resultCount === 0}
-            onPress={() => bottomSheetRef.current?.close()}
+            onPress={handleClose}
           >
             <Text className="text-base font-bold text-primary-foreground">
-              {resultCount > 0 ? `Показать ${resultCount} билетов` : 'Билеты не найдены'}
+              {resultCount > 0 ? `Показать ${resultCount} билетов` : "Билеты не найдены"}
             </Text>
           </Button>
         </View>
@@ -148,3 +160,6 @@ export default function OffersFilterBottomSheet({
     </Portal>
   );
 }
+
+const getBtnTextClass = (isActive: boolean) =>
+  cn(isActive ? "text-primary-foreground" : "text-foreground");

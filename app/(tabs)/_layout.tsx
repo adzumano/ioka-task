@@ -1,5 +1,5 @@
-import { Tabs } from 'expo-router'
-import { PlaneIcon, ReceiptTextIcon, TrainFrontIcon } from 'lucide-react-native'
+import { Tabs } from "expo-router";
+import { PlaneIcon, ReceiptTextIcon, TrainFrontIcon } from "lucide-react-native";
 
 export const unstable_settings = {
   initialRouteName: "index",
@@ -7,28 +7,30 @@ export const unstable_settings = {
 
 export default function TabsLayout() {
   return (
-    <Tabs screenOptions={{ 
-      tabBarActiveTintColor: '#007AFF',
-      headerShown: false
-    }}>
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: "#007AFF",
+        headerShown: false,
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Результаты',
+          title: "Авиа",
           tabBarIcon: ({ color }) => <PlaneIcon size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="wagon"
         options={{
-          title: 'Вагоны',
+          title: "Поезда",
           tabBarIcon: ({ color }) => <TrainFrontIcon size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="order"
         options={{
-          title: 'Заказ',
+          title: "Заказ",
           tabBarIcon: ({ color }) => <ReceiptTextIcon size={24} color={color} />,
         }}
       />

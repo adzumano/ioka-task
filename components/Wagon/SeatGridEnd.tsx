@@ -1,4 +1,4 @@
-import { WAGON_GEOMETRY as WG } from "@/constants/wagon";
+import { WAGON_GEOMETRY as WG } from "@/lib/constants/wagon";
 import React from "react";
 import { G, Rect, Text as SvgText } from "react-native-svg";
 

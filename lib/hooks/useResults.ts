@@ -1,5 +1,5 @@
 import { useFlightOffers } from "@/api/useFlightOffers";
-import { useOfferFilters } from "@/hooks/useOfferFilters";
+import { useOfferFilters } from "@/lib/hooks/useOfferFilters";
 import { useOfferStore } from "@/stores/offerStore";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { useRef } from "react";

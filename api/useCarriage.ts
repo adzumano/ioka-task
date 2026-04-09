@@ -1,6 +1,6 @@
+import { $api } from "@/config/axios";
 import { Carriage } from "@/types/wagon";
 import { useQuery } from "@tanstack/react-query";
-import { $api } from "./axios";
 
 const fetchCarriage = async (): Promise<Carriage> => {
   const response = await $api.get("/api/travel");

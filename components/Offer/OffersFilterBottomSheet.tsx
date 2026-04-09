@@ -9,8 +9,8 @@ import { ScrollView, Text, View } from "react-native";
 
 import { Button } from "@/components/ui/button";
 import Divider from "@/components/ui/divider";
-import { STOPS_OPTIONS } from "@/constants/stops";
-import { useOfferFilters } from "@/hooks/useOfferFilters";
+import { STOPS_OPTIONS } from "@/lib/constants/stops";
+import { useOfferFilters } from "@/lib/hooks/useOfferFilters";
 import { cn } from "@/lib/utils";
 import type { Offer } from "@/types/offer";
 

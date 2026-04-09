@@ -3,7 +3,7 @@ import Loader from "@/components/ui/loader";
 import { SeatGrid } from "@/components/Wagon/SeatGrid";
 import WagonFooter from "@/components/Wagon/WagonFooter";
 import WagonHeader from "@/components/Wagon/WagonHeader";
-import { useWagon } from "@/hooks/useWagon";
+import { useWagon } from "@/lib/hooks/useWagon";
 import React from "react";
 import { ScrollView, View } from "react-native";
 import { GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
@@ -60,7 +60,7 @@ export default function Wagon() {
               >
                 <View className="px-10">
                   <Animated.View style={animatedStyle}>
-                    {carriage && <SeatGrid carriage={carriage} />}
+                    {carriage && <SeatGrid seats={carriage.seats} />}
                   </Animated.View>
                 </View>
               </ScrollView>

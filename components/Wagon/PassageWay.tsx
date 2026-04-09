@@ -1,4 +1,4 @@
-import { endX, passageBottom, passageHeight, passageTop, startX } from "@/constants/wagon";
+import { endX, passageBottom, passageHeight, passageTop, startX } from "@/lib/constants/wagon";
 import React from "react";
 import { G, Line, Rect } from "react-native-svg";
 

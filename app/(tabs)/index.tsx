@@ -3,7 +3,7 @@ import OfferList from "@/components/Offer/OfferList";
 import OffersFilterBottomSheet from "@/components/Offer/OffersFilterBottomSheet";
 import OffersHeader from "@/components/Offer/OffersHeader";
 import Loader from "@/components/ui/loader";
-import { useResults } from "@/hooks/useResults";
+import { useResults } from "@/lib/hooks/useResults";
 import React from "react";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

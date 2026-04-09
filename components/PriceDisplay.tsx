@@ -11,14 +11,12 @@ export function PriceDisplay() {
     maximumFractionDigits: 0,
   }).format(totalPrice);
 
-  if (totalPrice === 0) return null;
-
   return (
     <Animated.View entering={FadeInRight} exiting={FadeOutLeft} className="items-end">
       <Text className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
         Итого к оплате
       </Text>
-      <Text className="text-xl font-extrabold text-primary">{formattedPrice}</Text>
+      <Text className="text-xl font-extrabold text-primary text-right">{formattedPrice}</Text>
     </Animated.View>
   );
 }

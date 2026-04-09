@@ -1,35 +1,19 @@
-import { generateOffers } from "@/constants/offers";
-import { getScenario } from "@/lib/mock";
 import { Offer } from "@/types/offer";
 import { useQuery } from "@tanstack/react-query";
 
-import axios from "axios";
-import AxiosMockAdapter from "axios-mock-adapter";
-
-const mock = new AxiosMockAdapter(axios, { delayResponse: 1300 });
-
-mock.onGet("/api/search/flight").reply(() => {
-  const scenario = getScenario();
-
-  switch (scenario) {
-    case "success":
-      return [200, generateOffers({ count: 10000 })];
-    case "empty":
-      return [200, []];
-    case "error":
-      return [500, { message: "Internal Server Error", success: false }];
-  }
-});
+import { $api } from "./axios";
 
 const fetchOffers = async (): Promise<Offer[]> => {
-  const response = await axios.get("/api/search/flight");
+  const response = await $api.get("/api/search/flight");
 
   return response.data;
 };
 
+const FLIGHT_OFFERS_KEY = ["flight-offers"];
+
 export const useFlightOffers = () => {
   return useQuery({
-    queryKey: ["flight-offers"],
+    queryKey: FLIGHT_OFFERS_KEY,
     queryFn: () => fetchOffers(),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,

@@ -1,80 +1,94 @@
-import { Text } from "@/components/ui/text";
-import { useWagonStore } from "@/stores/wagonStore";
-import { Seat } from "@/types/wagon";
+import { useIsSeatSelected, useWagonStore } from "@/stores/wagonStore";
+import { SeatPosition } from "@/types/wagon";
 import * as Haptics from "expo-haptics";
-import { Pressable } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
+import React, { memo } from "react";
+import { G, Rect, Text as SvgText } from "react-native-svg";
 
-interface SeatItemProps {
-  seat: Seat;
-  size: number;
-}
+export const SeatItem = memo(({ seat, x, y, width, height }: SeatPosition) => {
+  const isSelected = useIsSeatSelected(seat.id);
+  const { selectSeat, deselectSeat, canSelectMore } = useWagonStore();
 
-export function SeatItem({ seat, size }: SeatItemProps) {
-  const selectedSeats = useWagonStore((state) => state.selectedSeats);
-  const selectSeat = useWagonStore((state) => state.selectSeat);
-  const deselectSeat = useWagonStore((state) => state.deselectSeat);
-  const canSelectMore = useWagonStore((state) => state.canSelectMore);
-
-  const isSelected = selectedSeats.has(seat.id);
-  const scale = useSharedValue(1);
-  const opacity = useSharedValue(1);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-    opacity: opacity.value,
-  }));
+  const isTaken = seat.status === "taken";
 
   const handlePress = () => {
-    if (seat.status === "taken") return;
+    if (isTaken) return;
 
     if (isSelected) {
       deselectSeat(seat.id);
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      scale.value = withSpring(1, { damping: 8 });
-    } else {
-      if (!canSelectMore()) {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-        return;
-      }
-
-      const success = selectSeat(seat);
-      if (success) {
+    } else if (canSelectMore()) {
+      // Передаем объект seat в стор
+      if (selectSeat(seat)) {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-        scale.value = withSpring(0.95, { damping: 8 });
       }
+    } else {
+      // Если нельзя выбрать больше 4 мест
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
     }
   };
 
-  const getBgColor = () => {
-    if (seat.status === "taken") return "#e5e7eb"; // gray
-    if (isSelected) return "#3b82f6"; // blue
-    return "#f3f4f6"; // light gray
+  // --- ЦВЕТОВАЯ ПАЛИТРА ПО ТВОЕМУ ТЗ ---
+
+  // 1. Контур (Stroke)
+  // Верхние (upper) — Зеленый, Нижние (lower) — Синий
+  const getStrokeColor = () => {
+    if (isTaken) return "#E5E7EB"; // Светло-серый для занятых
+    if (isSelected) return "#2563EB"; // Ярко-синий при выборе (акцент)
+    return seat.type === "upper" ? "#10B981" : "#3B82F6";
+  };
+
+  // 2. Заливка (Fill)
+  const getFillColor = () => {
+    if (isTaken) return "#F3F4F6"; // Серый фон для занятых
+    if (isSelected) return "#DBEAFE"; // Светло-голубой фон при выделении
+    return "#FFFFFF"; // Белый фон для свободных
+  };
+
+  // 3. Цвет текста
+  const getTextColor = () => {
+    if (isTaken) return "#9CA3AF"; // Серый текст для занятых
+    if (isSelected) return "#1E40AF"; // Темно-синий для выбранного
+    return "#1F2937"; // Стандартный темный
   };
 
   return (
-    <Animated.View style={animatedStyle}>
-      <Pressable
-        onPress={handlePress}
-        disabled={seat.status === "taken"}
-        className="rounded"
-        style={{
-          width: size,
-          height: size,
-          backgroundColor: getBgColor(),
-          justifyContent: "center",
-          alignItems: "center",
-          opacity: seat.status === "taken" ? 0.5 : 1,
-        }}
+    <G transform={`translate(${x}, ${y})`} onPress={handlePress}>
+      {/* Прямоугольник полки */}
+      <Rect
+        width={width}
+        height={height}
+        rx={6} // Скругление как на скриншоте
+        fill={getFillColor()}
+        stroke={getStrokeColor()}
+        strokeWidth={isSelected ? 2 : 1.2}
+      />
+
+      {/* Номер места */}
+      <SvgText
+        x={width / 2}
+        y={height / 2 + 5} // Центрирование текста по вертикали (базовая линия)
+        textAnchor="middle"
+        fontSize="13"
+        fontWeight="600"
+        fill={getTextColor()}
       >
-        <Text
-          className={`text-xs font-semibold ${
-            isSelected || seat.status === "taken" ? "text-white" : "text-gray-600"
-          }`}
-        >
-          {seat.id}
-        </Text>
-      </Pressable>
-    </Animated.View>
+        {seat.id}
+      </SvgText>
+
+      {/* Маленький индикатор цены (опционально, если нужно как на схемах) */}
+      {!isTaken && !isSelected && (
+        <Rect
+          x={width - 4}
+          y={2}
+          width={2}
+          height={2}
+          rx={1}
+          fill={seat.type === "upper" ? "#10B981" : "#3B82F6"}
+          opacity={0.5}
+        />
+      )}
+    </G>
   );
-}
+});
+
+SeatItem.displayName = "SeatItem";

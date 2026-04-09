@@ -19,28 +19,23 @@ export const useWagonStore = create<WagonState>((set, get) => ({
   selectedSeats: new Map(),
   totalPrice: 0,
 
-  selectSeat: (seat) => {
-    const { selectedSeats, carriage } = get();
+  selectSeat: (seat: Seat) => {
+    const currentSelected = get().selectedSeats;
 
-    // Проверка лимита
-    if (selectedSeats.size >= MAX_SEATS) return false;
+    // 1. Бизнес-логика: не более 4 мест
+    if (currentSelected.size >= 4) return false;
 
-    // Добавляем место
-    const newSelected = new Map(selectedSeats);
-    newSelected.set(seat.id, seat);
+    // 2. Нельзя выбрать уже занятое (на всякий случай)
+    if (seat.status === "taken") return false;
 
-    // Пересчитываем цену
-    let newPrice = 0;
-    newSelected.forEach((s) => {
-      const multiplier = carriage?.price_multiplier[s.type] || 1;
-      newPrice += s.price * multiplier;
+    set((state) => {
+      const newMap = new Map(state.selectedSeats);
+      newMap.set(seat.id, seat);
+      return {
+        selectedSeats: newMap,
+        totalPrice: state.totalPrice + seat.price,
+      };
     });
-
-    set({
-      selectedSeats: newSelected,
-      totalPrice: newPrice,
-    });
-
     return true;
   },
 
@@ -66,3 +61,6 @@ export const useWagonStore = create<WagonState>((set, get) => ({
 
   canSelectMore: () => get().selectedSeats.size < MAX_SEATS,
 }));
+
+export const useIsSeatSelected = (id: string) =>
+  useWagonStore((state) => state.selectedSeats.has(id));

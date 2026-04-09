@@ -18,19 +18,12 @@ export interface Carriage {
     rows: number;
     columns: number;
   };
-  price_multiplier: {
-    lower: 1.0;
-    upper: 0.85;
-    side: 0.95;
-  };
 }
 
-export interface TrainInfo {
-  id: string;
-  carriages: Carriage[];
-}
-
-export interface SelectionState {
-  selectedSeats: Set<string>;
-  totalPrice: number;
-}
+export type SeatPosition = {
+  seat: Seat;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};

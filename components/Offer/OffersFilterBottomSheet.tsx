@@ -11,18 +11,15 @@ import { Button } from "@/components/ui/button";
 import Divider from "@/components/ui/divider";
 import { STOPS_OPTIONS } from "@/lib/constants/stops";
 import { useOfferFilters } from "@/lib/hooks/useOfferFilters";
-import { cn } from "@/lib/utils";
+import { cn, getBtnTextClass } from "@/lib/utils";
 import type { Offer } from "@/types/offer";
+import SectionHeader from "./SectionHeader";
 
 interface OffersFilterBottomSheetProps {
   bottomSheetRef: React.RefObject<BottomSheet | null>;
   activeCount: number;
   offers: Offer[];
 }
-
-const SectionHeader = ({ title }: { title: string }) => (
-  <Text className="text-base font-bold text-foreground mb-3 mt-2">{title}</Text>
-);
 
 export default function OffersFilterBottomSheet({
   bottomSheetRef,
@@ -160,6 +157,3 @@ export default function OffersFilterBottomSheet({
     </Portal>
   );
 }
-
-const getBtnTextClass = (isActive: boolean) =>
-  cn(isActive ? "text-primary-foreground" : "text-foreground");

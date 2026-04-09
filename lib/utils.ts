@@ -85,3 +85,6 @@ export const currencyFormatter = new Intl.NumberFormat("ru-RU", {
   currency: "KZT",
   maximumFractionDigits: 0,
 });
+
+export const getBtnTextClass = (isActive: boolean) =>
+  cn(isActive ? "text-primary-foreground" : "text-foreground");

@@ -6,18 +6,14 @@ import { useCallback, useMemo } from "react";
 export const useOfferFilters = (offers: Offer[]) => {
   const { filters, setFilters, resetFilters } = useOfferStore();
 
-  // 1. Извлекаем список доступных авиакомпаний из исходных офферов
   const availableAirlines = useMemo(() => extractAirlines(offers), [offers]);
 
   const baseOffers = useMemo(() => deduplicateOffers(offers), [offers]);
 
-  // 2. Применяем фильтрацию к офферам
   const filteredOffers = useMemo(() => filterOffers(baseOffers, filters), [baseOffers, filters]);
 
-  // 3. Счётчик подходящих билетов
   const resultCount = useMemo(() => filteredOffers.length, [filteredOffers.length]);
 
-  // 4. Обработчик пересадок
   const toggleStop = useCallback(
     (value: number) => {
       const current = filters.stops ?? [];
@@ -30,7 +26,6 @@ export const useOfferFilters = (offers: Offer[]) => {
     [filters.stops, setFilters],
   );
 
-  // 5. Обработчик авиакомпаний
   const toggleAirline = useCallback(
     (code: string) => {
       const current = filters.airlines ?? [];
@@ -41,7 +36,6 @@ export const useOfferFilters = (offers: Offer[]) => {
     [filters.airlines, setFilters],
   );
 
-  // Хелпер для определения активен ли режим "Прямой рейс" в популярных фильтрах
   const isDirectOnly = useMemo(
     () => filters.stops?.length === 1 && filters.stops.includes(0),
     [filters.stops],

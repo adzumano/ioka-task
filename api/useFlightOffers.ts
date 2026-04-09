@@ -1,6 +1,5 @@
 import { Offer } from "@/types/offer";
 import { useQuery } from "@tanstack/react-query";
-
 import { $api } from "./axios";
 
 const fetchOffers = async (): Promise<Offer[]> => {

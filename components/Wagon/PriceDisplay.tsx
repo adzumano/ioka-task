@@ -1,15 +1,12 @@
 import { Text } from "@/components/ui/text";
+import { currencyFormatter } from "@/lib/utils";
 import { useWagonStore } from "@/stores/wagonStore";
 import Animated, { FadeInRight, FadeOutLeft } from "react-native-reanimated";
 
 export function PriceDisplay() {
   const totalPrice = useWagonStore((state) => state.totalPrice);
 
-  const formattedPrice = new Intl.NumberFormat("ru-RU", {
-    style: "currency",
-    currency: "KZT",
-    maximumFractionDigits: 0,
-  }).format(totalPrice);
+  const formattedPrice = currencyFormatter.format(totalPrice);
 
   return (
     <Animated.View entering={FadeInRight} exiting={FadeOutLeft} className="items-end">

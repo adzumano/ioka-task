@@ -1,7 +1,7 @@
 import ErrorState from "@/components/ErrorState";
-import OfferList from "@/components/OfferList";
-import OffersFilterBottomSheet from "@/components/OffersFilterBottomSheet";
-import OffersHeader from "@/components/OffersHeader";
+import OfferList from "@/components/Offer/OfferList";
+import OffersFilterBottomSheet from "@/components/Offer/OffersFilterBottomSheet";
+import OffersHeader from "@/components/Offer/OffersHeader";
 import Loader from "@/components/ui/loader";
 import { useResults } from "@/hooks/useResults";
 import React from "react";

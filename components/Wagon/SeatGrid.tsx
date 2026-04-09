@@ -1,4 +1,4 @@
-import { WAGON_GEOMETRY as WG } from "@/constants/wagon";
+import { OFFSET_RIGHT, SECTION_WIDTH, WAGON_GEOMETRY as WG } from "@/constants/wagon";
 import { Carriage, SeatPosition } from "@/types/wagon";
 import React, { useMemo } from "react";
 import Svg, { Line, Rect } from "react-native-svg";
@@ -11,15 +11,8 @@ interface SeatGridProps {
   carriage: Carriage;
 }
 
-const OFFSET_RIGHT = 18;
-
 export function SeatGrid({ carriage }: SeatGridProps) {
-  // Ширина одной секции (купе): 2 полки + зазор внутри + зазор между купе (столик)
-  const SECTION_WIDTH = WG.SEAT_W * 2 + WG.COMPARTMENT_GAP + WG.GROUP_GAP;
-
   const seatPositions = useMemo<SeatPosition[]>(() => {
-    // На сколько пикселей сдвинуть все места вправо
-
     return carriage.seats.map((seat) => {
       const num = parseInt(seat.id);
       let x = 0,
@@ -27,25 +20,20 @@ export function SeatGrid({ carriage }: SeatGridProps) {
         w = WG.SEAT_W,
         h = WG.SEAT_H;
 
-      // Базовая ширина секции (купе)
-      const SECTION_WIDTH = WG.SEAT_W * 2 + WG.COMPARTMENT_GAP + WG.GROUP_GAP;
-
       if (num <= 36) {
-        // --- КУПЕЙНЫЕ МЕСТА ---
         const sectionIndex = Math.floor((num - 1) / 4);
         const isRightPair = Math.floor(((num - 1) % 4) / 2) === 1;
         const isUpper = num % 2 === 0;
 
         x =
           WG.LEFT_SERVICE_W +
-          OFFSET_RIGHT + // Добавляем смещение здесь
+          OFFSET_RIGHT +
           sectionIndex * SECTION_WIDTH +
           (isRightPair ? WG.SEAT_W + WG.COMPARTMENT_GAP : 0);
 
         y = WG.TOP_MARGIN + (isUpper ? 0 : WG.SEAT_H + 2);
         seat.type = isUpper ? "upper" : "lower";
       } else {
-        // --- БОКОВЫЕ МЕСТА ---
         const sectionIndex = 8 - Math.floor((num - 37) / 2);
         const isUpperSide = num % 2 === 0;
 

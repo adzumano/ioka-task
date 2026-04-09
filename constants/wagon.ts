@@ -56,3 +56,7 @@ export const passageBottom =
   WAGON_GEOMETRY.HEIGHT - WAGON_GEOMETRY.BOTTOM_MARGIN - WAGON_GEOMETRY.SEAT_H - 16;
 export const passageHeight = passageBottom - passageTop;
 export const endX = WAGON_GEOMETRY.WIDTH - WAGON_GEOMETRY.RIGHT_SERVICE_W - 20;
+
+export const OFFSET_RIGHT = 18;
+export const SECTION_WIDTH =
+  WAGON_GEOMETRY.SEAT_W * 2 + WAGON_GEOMETRY.COMPARTMENT_GAP + WAGON_GEOMETRY.GROUP_GAP;

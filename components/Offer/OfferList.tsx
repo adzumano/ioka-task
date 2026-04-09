@@ -2,7 +2,7 @@ import { Offer } from "@/types/offer";
 import React from "react";
 import { FlatList, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import ListEmpty from "./ListEmpty";
+import ListEmpty from "../ListEmpty";
 import OfferCard from "./OfferCard";
 
 interface OfferListProps {

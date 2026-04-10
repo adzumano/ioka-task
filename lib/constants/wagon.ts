@@ -1,6 +1,5 @@
 import { Carriage, Seat } from "@/types/wagon";
-
-export const BASE_PRICE = 11250;
+import { BASE_PRICE } from "./shared";
 
 const generateSeats = (count: number): Seat[] => {
   const seats: Seat[] = [];

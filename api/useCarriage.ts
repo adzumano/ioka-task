@@ -14,7 +14,5 @@ export const useCarriage = () => {
   return useQuery({
     queryKey: CARRIAGE_KEY,
     queryFn: () => fetchCarriage(),
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
   });
 };

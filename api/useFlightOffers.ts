@@ -14,7 +14,5 @@ export const useFlightOffers = () => {
   return useQuery({
     queryKey: FLIGHT_OFFERS_KEY,
     queryFn: () => fetchOffers(),
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
   });
 };

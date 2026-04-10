@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { PlaneIcon, ShoppingBasketIcon, TrainFrontIcon } from "lucide-react-native";
+import { PlaneIcon, ReceiptTextIcon, TrainFrontIcon } from "lucide-react-native";
 
 export const unstable_settings = {
   initialRouteName: "index",
@@ -28,10 +28,16 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="basket"
+        name="checkout"
         options={{
-          title: "Корзина",
-          tabBarIcon: ({ color }) => <ShoppingBasketIcon size={24} color={color} />,
+          title: "Заказ",
+          tabBarIcon: ({ color }) => <ReceiptTextIcon size={24} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="orders/[id]"
+        options={{
+          href: null,
         }}
       />
     </Tabs>

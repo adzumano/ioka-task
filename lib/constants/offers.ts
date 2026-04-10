@@ -1,4 +1,5 @@
 import type { AirlineCompany, Offer, Segment } from "@/types/offer";
+import { CURRENCY } from "./shared";
 
 // ─── Airlines ────────────────────────────────────────────────────────────────
 
@@ -221,7 +222,7 @@ export const generateOffers = (options: GenerateOptions = {}): Offer[] => {
     offers.push({
       id: offerId, // ID оффера всегда разный
       segments, // СЕГМЕНТЫ могут быть одинаковыми
-      price: { amount: price, currency: "KZT" },
+      price: { amount: price, currency: CURRENCY },
       is_baggage_included: hasBaggage,
       ...(baggage_weight !== undefined && { baggage_weight }),
       refund_policy,

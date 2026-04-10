@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 import { FilterState, Offer } from "@/types/offer";
+import { CURRENCY } from "./constants/shared";
 
 export const cn = (...inputs: ClassValue[]) => {
   return twMerge(clsx(inputs));
@@ -82,7 +83,7 @@ export const getTime = (dateStr: string) => {
 
 export const currencyFormatter = new Intl.NumberFormat("ru-RU", {
   style: "currency",
-  currency: "KZT",
+  currency: CURRENCY,
   maximumFractionDigits: 0,
 });
 

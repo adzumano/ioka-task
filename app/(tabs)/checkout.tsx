@@ -6,29 +6,13 @@ import { Card } from "@/components/ui/card";
 import Divider from "@/components/ui/divider";
 import Loader from "@/components/ui/loader";
 import { Text } from "@/components/ui/text";
-import { useStripe } from "@stripe/stripe-react-native";
-import * as Linking from "expo-linking";
-import { useEffect, useState } from "react";
-import { Alert, View } from "react-native";
+import { useCheckout } from "@/lib/hooks/useCheckout";
+import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-async function fetchPaymentSheetParams(): Promise<{
-  paymentIntent: string;
-  ephemeralKey: string;
-  customer: string;
-}> {
-  return fetch(`/api/payment-sheet`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then((res) => res.json());
-}
 
 export default function Checkout() {
   const insets = useSafeAreaInsets();
-  const { initPaymentSheet, presentPaymentSheet } = useStripe();
-  const [loading, setLoading] = useState(false);
+  const { isReady, isCreatingOrder, handlePay } = useCheckout();
 
   const {
     data: basketDetail,
@@ -38,51 +22,6 @@ export default function Checkout() {
     error,
     refetch,
   } = useCheckoutDetail();
-
-  const initializePaymentSheet = async () => {
-    const { paymentIntent, ephemeralKey, customer } = await fetchPaymentSheetParams();
-
-    // Use Mock payment data: https://docs.stripe.com/payments/accept-a-payment?platform=react-native&ui=payment-sheet#react-native-test
-    const { error } = await initPaymentSheet({
-      merchantDisplayName: "Expo, Inc.",
-
-      customerId: customer,
-      customerEphemeralKeySecret: ephemeralKey,
-      paymentIntentClientSecret: paymentIntent,
-      // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
-      //methods that complete payment after a delay, like SEPA Debit and Sofort.
-      allowsDelayedPaymentMethods: true,
-      defaultBillingDetails: {
-        name: "Jane Doe",
-        email: "jenny.rosen@example.com",
-        phone: "888-888-8888",
-      },
-      returnURL: Linking.createURL("stripe-redirect"),
-
-      // Enable Apple Pay:
-      // https://docs.stripe.com/payments/accept-a-payment?platform=react-native&ui=payment-sheet#add-apple-pay
-      applePay: {
-        merchantCountryCode: "KZ",
-      },
-    });
-    if (!error) {
-      setLoading(true);
-    }
-  };
-
-  const openPaymentSheet = async () => {
-    const { error } = await presentPaymentSheet();
-
-    if (error) {
-      // Alert.alert(`Error code: ${error.code}`, error.message);
-    } else {
-      Alert.alert("Success", "Your order is confirmed!");
-    }
-  };
-
-  useEffect(() => {
-    initializePaymentSheet();
-  }, []);
 
   if (isLoading || isRefetching) {
     return <Loader text="Загружаем бронирование..." />;
@@ -145,8 +84,8 @@ export default function Checkout() {
         <Button
           size="lg"
           className="w-full shadow-md"
-          onPress={openPaymentSheet}
-          disabled={!loading}
+          onPress={handlePay}
+          disabled={!isReady || isCreatingOrder}
         >
           <Text className="text-primary-foreground font-bold">Оплатить</Text>
         </Button>

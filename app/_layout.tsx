@@ -8,8 +8,8 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Toaster } from "sonner-native";
 import "../global.css";
-
 const queryClient = new QueryClient();
 
 export default Sentry.wrap(function RootLayout() {
@@ -21,9 +21,12 @@ export default Sentry.wrap(function RootLayout() {
             <SafeAreaProvider>
               <Stack>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="stripe-redirect" options={{ headerShown: false }} />
+                <Stack.Screen name="+not-found" />
               </Stack>
               <StatusBar style="auto" />
               <PortalHost />
+              <Toaster />
             </SafeAreaProvider>
           </ThemeProvider>
         </StripeProvider>
